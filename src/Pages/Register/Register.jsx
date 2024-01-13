@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { imageUpload } from "../../Utils/Utils";
+import useAuth from "../../hooks/useAuth";
 
 
 const Register = () => {
-
+  const { createUser, updateUserProfile } = useAuth();
 
   const {
     register,
@@ -22,7 +24,20 @@ const Register = () => {
     console.log(imageData);
 
     // user registration with firebase
-   
+    createUser(data.email, data.password).then((result) => {
+      console.log(result.user);
+
+      // profile update
+      updateUserProfile(data.name, imageData?.data?.display_url)
+        .then(() => {
+          // create user entry in the database
+         
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error(error);
+        });
+    });
   };
 
   return (
@@ -30,11 +45,7 @@ const Register = () => {
       <div className="w-full min-h-screen flex bg-cover bg-center">
         <div className="hero">
           <div className="hero-content flex flex-col md:flex-row  rounded-xl justify-between">
-            
-            <div
-              className="card w-1/1  flex-shrink-0 shadow-2xl"
-              data-aos="fade-left"
-            >
+            <div className="card w-1/1  flex-shrink-0 shadow-2xl">
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="card-body w-[350px]"
@@ -113,7 +124,6 @@ const Register = () => {
                     id="image"
                     accept="image/*"
                   />
-                  
                 </div>
 
                 <div className="form-control mt-2">
@@ -129,9 +139,7 @@ const Register = () => {
                       <span className="font-semibold">login Now</span>
                     </Link>
                   </p>
-                  
                 </div>
-                
               </form>
             </div>
           </div>

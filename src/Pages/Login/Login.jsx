@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const { signIn } = useAuth();
   const {
     register,
     handleSubmit,
@@ -10,6 +13,14 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
+	signIn(data.email, data.password)
+      .then((result) => {
+        toast.success("Login Successfully");
+        console.log(result.user);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   return (
