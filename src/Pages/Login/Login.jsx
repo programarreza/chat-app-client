@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 
 const Login = () => {
   const { signIn } = useAuth();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -13,9 +15,10 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-	signIn(data.email, data.password)
+    signIn(data.email, data.password)
       .then((result) => {
         toast.success("Login Successfully");
+        navigate("/");
         console.log(result.user);
       })
       .catch((err) => {
@@ -96,10 +99,10 @@ const Login = () => {
                   >
                     Login Now
                   </button>
-                  <p className="text-[#006ce1] text-center mt-2">
+                  <p className="text-center mt-2">
                     Are you new user?
                     <Link to={"/register"}>
-                      <span className="font-semibold"> Register Now </span>
+                      <span className="font-semibold text-[#006ce1] "> Register Now </span>
                     </Link>
                   </p>
                 </div>

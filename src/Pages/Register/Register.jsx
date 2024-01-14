@@ -1,16 +1,19 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { imageUpload } from "../../Utils/Utils";
 import useAuth from "../../hooks/useAuth";
+import useAxiosLocal from "../../hooks/useAxiosLocal";
 
 
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
+  const axiosLocal = useAxiosLocal();
 
   const {
     register,
-    // reset,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -31,7 +34,20 @@ const Register = () => {
       updateUserProfile(data.name, imageData?.data?.display_url)
         .then(() => {
           // create user entry in the database
-         
+          const userInfo = {
+            fullName: data.name,
+            email: data.email,
+            image: imageData?.data?.display_url,
+          };
+          
+          axiosLocal.post("/api/users", userInfo).then((res) => {
+            if (res.status === 200) {
+              toast.success("Registration Successful");
+              reset();
+              navigate("/");
+            }
+          });
+
         })
         .catch((error) => {
           console.log(error);
@@ -133,10 +149,12 @@ const Register = () => {
                   >
                     Sign Up
                   </button>
-                  <p className="text-[#006ce1] text-center mt-2">
+                  <p className=" text-center mt-2">
                     Already registered?{" "}
                     <Link to={"/login"}>
-                      <span className="font-semibold">login Now</span>
+                      <span className="font-semibold text-[#006ce1]">
+                        login Now
+                      </span>
                     </Link>
                   </p>
                 </div>
