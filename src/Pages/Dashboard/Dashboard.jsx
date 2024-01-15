@@ -13,20 +13,32 @@ const Dashboard = () => {
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [users, setUsers] = useState([]);
 
+  console.log(26, conversations);
+  console.log(messages?.receiver?.receiverId);
+  console.log("all user", users);
   console.log(loggedInUser?._id);
+
   const image = "https://i.postimg.cc/mkphFd7b/IMG-20200811-141534.jpg";
 
   useEffect(() => {
     const fetchConversations = async () => {
-      const res = await axiosLocal(`/api/conversations/${loggedInUser?._id}`);
+      const res = await axiosLocal.get(
+        `/api/conversations/${loggedInUser?._id}`
+      );
       setConversations(res?.data);
     };
     fetchConversations();
   }, [loggedInUser?._id]);
 
-  console.log(conversations);
-  console.log(messages?.receiver?.receiverId);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const res = await axiosLocal.get(`/api/users`);
+      setUsers(res?.data);
+    };
+    fetchUsers();
+  }, []);
 
   const fetchMessages = async (conversationId, user) => {
     const res = await axiosLocal.get(`/api/message/${conversationId}`);
@@ -41,7 +53,7 @@ const Dashboard = () => {
     message,
     receiverId: messages?.receiver?.receiverId,
   };
-  
+
   const sendMessage = async () => {
     await axiosLocal.post("/api/message", userSendMessage).then((res) => {
       if (res.status === 200) {
@@ -53,7 +65,7 @@ const Dashboard = () => {
 
   return (
     <div className="w-full flex justify-center bg-gray-100">
-      { /* users area */}
+      {/* users area */}
       <div className="w-[25%] h-screen bg-[#cbe6f9]">
         <div className="m-2">
           {/* logged in user profile */}
@@ -77,6 +89,7 @@ const Dashboard = () => {
 
           {/* already conversation user area */}
           <div className="border-b-2 border-gray-300">
+            <div className="text-blue-500">Messages </div>
             {conversations.length > 0 ? (
               conversations?.map(({ conversationId, user }) => {
                 return (
@@ -112,7 +125,7 @@ const Dashboard = () => {
       </div>
 
       {/* chatting area */}
-      <div className="w-[75%] border-2 h-screen ">
+      <div className="w-[50%] border-2 h-screen ">
         {/* chatting heading */}
         {messages?.receiver?.fullName && (
           <div className="flex justify-between items-center shadow-md bg-[#cbe6f9]">
@@ -183,6 +196,38 @@ const Dashboard = () => {
                 !message && "pointer-events-none"
               }`}
             />
+          </div>
+        )}
+      </div>
+
+      <div className="w-[25%] border-2  m-1 h-screen ">
+        <div className="text-blue-500 p-2">All People </div>
+        {users?.length > 0 ? (
+          users?.map(({ receiverId, user }) => {
+            return (
+              <>
+                <div
+                  className="cursor-pointer flex "
+                  onClick={() => fetchMessages(receiverId, user)}
+                >
+                  <div className="flex  items-center p-4 ">
+                    <div className="avatar mr-4">
+                      <div className="w-12 border border-black rounded-full">
+                        <img src={image} alt="profile image" />
+                      </div>
+                    </div>
+                    <div>
+                      <h2>{user?.fullName}</h2>
+                      <p className="text-sm">{user?.email}</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })
+        ) : (
+          <div className="text-center text-lg font-semibold my-12">
+            No Conversation
           </div>
         )}
       </div>
