@@ -1,20 +1,18 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-const PrivateRoutes = ({ children }) => {
+const NonUserRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
     return <h2>Loading....</h2>;
   }
 
-  if (user && !loading) {
+  if (!user ) {
     return children;
   }
 
-  return <Navigate to="/login" />;
+  return <Navigate to="/" />;
 };
 
-export default PrivateRoutes;
-
-
+export default NonUserRoute;

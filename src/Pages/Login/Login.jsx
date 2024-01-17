@@ -14,12 +14,10 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
     signIn(data.email, data.password)
-      .then((result) => {
+      .then(() => {
         toast.success("Login Successfully");
         navigate("/");
-        console.log(result.user);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -33,7 +31,6 @@ const Login = () => {
           <div className="hero-content flex flex-row  rounded-xl justify-between">
             <div
               className="card w-1/1  flex-shrink-0 shadow-2xl "
-              data-aos="fade-left"
             >
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -102,7 +99,10 @@ const Login = () => {
                   <p className="text-center mt-2">
                     Are you new user?
                     <Link to={"/register"}>
-                      <span className="font-semibold text-[#006ce1] "> Register Now </span>
+                      <span className="font-semibold text-[#006ce1] ">
+                        {" "}
+                        Register Now{" "}
+                      </span>
                     </Link>
                   </p>
                 </div>

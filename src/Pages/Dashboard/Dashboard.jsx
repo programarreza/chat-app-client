@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 import { axiosLocal } from "../../hooks/useAxiosLocal";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
   const { loggedInUser } = useLoggedInUser();
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
+  const [isShow, setIsShow] = useState(false);
 
   console.log(26, conversations);
   console.log(messages?.receiver?.receiverId);
@@ -69,17 +70,31 @@ const Dashboard = () => {
       <div className="w-[25%] h-screen bg-[#cbe6f9]">
         <div className="m-2">
           {/* logged in user profile */}
-          <div className="flex  items-center  p-4 border-b-2">
-            <div className="avatar mr-4">
-              <div className="w-14 border border-black rounded-full">
-                <img src={user?.photoURL} alt="profile image" />
+          <div className="dropdown dropdown-end flex">
+            <label
+              onClick={() => setIsShow(!isShow)}
+              className="btn btn-ghost btn-circle avatar "
+            >
+              <div className="w-10 rounded-full ">
+                <img alt="user profile" src={user?.photoURL} />
               </div>
-            </div>
+            </label>
             <div>
-              <h2>{user?.displayName}</h2>
-              <h2>{user?.email}</h2>
+              <div className="justify-between">{user?.displayName}</div>
+              <div className="justify-between">{user?.email}</div>
             </div>
           </div>
+          {isShow && user ? (
+            <ul
+              className="menu  absolute menu-sm dropdown-content  mt-0 z-[10] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <p onClick={logOut}>logout</p>
+              </li>
+            </ul>
+          ) : (
+            ""
+          )}
 
           {/* search by user name */}
           <input
