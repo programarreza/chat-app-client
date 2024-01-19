@@ -85,9 +85,7 @@ const Dashboard = () => {
             </div>
           </div>
           {isShow && user ? (
-            <ul
-              className="menu  absolute menu-sm dropdown-content  mt-0 z-[10] p-2 shadow bg-base-100 rounded-box w-52"
-            >
+            <ul className="menu  absolute menu-sm dropdown-content  mt-0 z-[10] p-2 shadow bg-base-100 rounded-box w-52">
               <li>
                 <p onClick={logOut}>logout</p>
               </li>
@@ -136,11 +134,40 @@ const Dashboard = () => {
           </div>
 
           {/* all users list */}
+          <div className="text-blue-500 p-2">All People </div>
+          {users?.length > 0 ? (
+            users?.map(({ receiverId, user }) => {
+              return (
+                <>
+                  <div
+                    className="cursor-pointer flex "
+                    onClick={() => fetchMessages("new", user)}
+                  >
+                    <div className="flex  items-center p-4 ">
+                      <div className="avatar mr-4">
+                        <div className="w-12 border border-black rounded-full">
+                          <img src={image} alt="profile image" />
+                        </div>
+                      </div>
+                      <div>
+                        <h2>{user?.fullName}</h2>
+                        <p className="text-sm">{user?.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              );
+            })
+          ) : (
+            <div className="text-center text-lg font-semibold my-12">
+              No Conversation
+            </div>
+          )}
         </div>
       </div>
 
       {/* chatting area */}
-      <div className="w-[50%] border-2 h-screen ">
+      <div className="w-[75%] border-2 h-screen ">
         {/* chatting heading */}
         {messages?.receiver?.fullName && (
           <div className="flex justify-between items-center shadow-md bg-[#cbe6f9]">
@@ -215,37 +242,6 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div className="w-[25%] border-2  m-1 h-screen ">
-        <div className="text-blue-500 p-2">All People </div>
-        {users?.length > 0 ? (
-          users?.map(({ receiverId, user }) => {
-            return (
-              <>
-                <div
-                  className="cursor-pointer flex "
-                  onClick={() => fetchMessages(receiverId, user)}
-                >
-                  <div className="flex  items-center p-4 ">
-                    <div className="avatar mr-4">
-                      <div className="w-12 border border-black rounded-full">
-                        <img src={image} alt="profile image" />
-                      </div>
-                    </div>
-                    <div>
-                      <h2>{user?.fullName}</h2>
-                      <p className="text-sm">{user?.email}</p>
-                    </div>
-                  </div>
-                </div>
-              </>
-            );
-          })
-        ) : (
-          <div className="text-center text-lg font-semibold my-12">
-            No Conversation
-          </div>
-        )}
-      </div>
     </div>
   );
 };
